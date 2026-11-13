@@ -1,0 +1,302 @@
+---
+import Base from "../layouts/Base.astro";
+import Section from "../components/Section.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+import BottomBar from "../components/BottomBar.astro";
+import Button from "../components/Button.astro";
+import FutureLink from "../components/FutureLink.astro";
+import { BRANCHES, PHONE, TELEGRAM, VIBER, EMAIL, HOURS, ADDRESS, SOON, wdth, fill } from "../data/site";
+import displayFont from "@fontsource-variable/science-gothic/files/science-gothic-cyrillic-wdth-normal.woff2?url";
+
+const TITLE = "Зарядні станції, інвертори й акумулятори — EcoDrive";
+const DESC = "Зарядні станції, гібридні інвертори й акумулятори для квартири, дому та бізнесу. Доставка Новою Поштою по Україні, гарантія магазину 30 днів.";
+
+const directions = [
+  { name: "Енергонезалежність", w: 170, wm: 100, text: "Зарядні станції, гібридні інвертори, акумулятори, системи резервного живлення, генератори, Starlink", href: "#energy" },
+  { name: "Електротранспорт", w: 110, wm: 92, text: "Електросамокати, електровелосипеди, моноколеса, електробайки, запчастини Kugoo Kirin", href: "#transport" },
+  { name: "ECODRIVE АВТО", w: 90, wm: 84, text: "Автотовари, диски для авто" },
+  { name: "Дім і побут", w: 80, wm: 76, text: "Фото та відео, техніка для дому, персональний догляд, фітнес та здоров’я, товари для дому, товари для тварин" },
+  { name: "Опт", w: 70, wm: 70, text: "Гуртові закупівлі, безготівковий розрахунок, видаткові накладні", href: "#wholesale" },
+];
+
+const panels = [
+  {
+    id: "flat", intro: "Квартира: портативна станція",
+    lead: "Підключили прилади — і світло в кімнаті не гасне. Дивіться на потужність у ватах: вона має покривати все, що вмикаєте одночасно.",
+    models: [
+      { name: "Fossibot F2400", params: [["2 400", "Вт"], ["2 048", "Вт·год"], ["ДБЖ", ""]], note: "Потужність, ємність і режим ДБЖ — з картки моделі" },
+      { name: "EcoFlow DELTA 3 Max", params: [], note: "Характеристики уточнюйте в менеджера" },
+      { name: "EcoFlow Delta 2 Max", params: [], note: "Характеристики уточнюйте в менеджера" },
+      { name: "Bluetti Apex 300", params: [], note: "Характеристики уточнюйте в менеджера" },
+    ],
+  },
+  {
+    id: "home", intro: "Дім: інвертор і акумулятор",
+    lead: "Постійна система: гібридний інвертор працює разом з акумулятором. Налаштування систем резервного живлення виконує команда EcoDrive.",
+    models: [
+      { name: "LuxPower SNA PRO-EU 6.5K", params: [["6,5", "кВт"]], note: "Потужність — за назвою моделі" },
+      { name: "LuxPower GETA 3.6K", params: [["3,6", "кВт"]], note: "Потужність — за назвою моделі" },
+      { name: "Dyness DL5.0C", params: [], note: "Акумулятор. Характеристики уточнюйте в менеджера" },
+      { name: "Deye SE-F16-C", params: [], note: "Акумулятор. Характеристики уточнюйте в менеджера" },
+    ],
+  },
+  {
+    id: "business", intro: "Бізнес: потужні системи",
+    lead: "Для великих будинків, виробництв і торгових об’єктів. Рахунок і документи — безготівковим розрахунком.",
+    models: [
+      { name: "Deye SUN-20K", params: [["20", "кВт"]], note: "Потужність — за назвою моделі" },
+      { name: "C&I ESS", params: [], note: "Накопичувачі енергії для бізнесу. Умови — під проєкт, питайте менеджера" },
+      { name: "BESS", params: [], note: "Батарейні системи накопичення. Умови — під проєкт, питайте менеджера" },
+    ],
+  },
+];
+
+const steps = [
+  ["Підбір у месенджері", "Напишіть у Telegram або Viber, що потрібно підключити, — менеджер підкаже модель."],
+  ["Оплата", "Карткою на сайті, на рахунок IBAN, післяплатою, частинами (ПриватБанк, Monobank) або безготівково для юросіб і ФОП."],
+  ["Відправка за 2–5 робочих днів", "Рахуємо від підтвердження замовлення до появи ТТН."],
+  ["Нова Пошта", "Поштомат, відділення або кур’єр. Вартість — за тарифами перевізника, сплачує отримувач."],
+  ["Перевірка при отриманні", "Ви оглядаєте товар одразу, коли забираєте його."],
+];
+
+const pw = (v: string, u: string) => {
+  const n = parseFloat(v.replace(/\u00A0/g, "").replace(",", "."));
+  const watts = u === "Вт" ? n : u === "кВт" ? n * 1000 : 0;
+  return watts ? `--w:${wdth(watts)}` : "";
+};
+
+const brands = ["Bluetti", "Anern", "Fossibot", "LuxPower", "Hinaess", "Aferiy", "PowMr", "NEAKASA"];
+
+const ld = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization", name: "ECODRIVE", telephone: "+380631539383", email: EMAIL,
+      contactPoint: { "@type": "ContactPoint", contactType: "customer service", telephone: "+380631539383", email: EMAIL, availableLanguage: "uk", hoursAvailable: { "@type": "OpeningHoursSpecification", dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"], opens: "10:00", closes: "19:00" } },
+    },
+    { "@type": "WebSite", name: "ECODRIVE", inLanguage: "uk" },
+  ],
+};
+---
+<Base lang="uk" title={TITLE} description={DESC}>
+  <link slot="head" rel="preload" href={displayFont} as="font" type="font/woff2" crossorigin />
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(ld)} />
+  <SiteHeader slot="header" />
+  <SiteFooter slot="footer" />
+
+  <!-- 1. hero -->
+  <Section id="hero" class="hero" rec="R-101,R-115,R-201,R-301,R-302">
+    <div class="container hero__in">
+      <h1 class="hero__title">Зарядні станції, інвертори й акумулятори для дому та бізнесу</h1>
+      <p class="hero__lead">Fossibot F2400 на 2&nbsp;400&nbsp;Вт для квартири, LuxPower на 6,5&nbsp;кВт для дому, Deye на 20&nbsp;кВт для бізнесу. Доставка Новою Поштою.</p>
+      <div class="hero__actions">
+        <Button href="#energy">Обрати джерело живлення</Button>
+        <Button href={TELEGRAM} variant="secondary" external>Запитати в Telegram</Button>
+      </div>
+      <ul class="scale" aria-label="Шкала потужності: від квартири до бізнесу">
+        {BRANCHES.map((b, i) => (
+          <li class="scale__li">
+            <a class="scale__item" href="#energy" data-branch={b.id} style={`--w:${wdth(b.watts)};--fill:${fill(b.watts)};--i:${i}`}>
+              <span class="scale__fig">{b.value}<span class="scale__unit">&nbsp;{b.unit}</span></span>
+              <span class="scale__bar" aria-hidden="true"><i></i></span>
+              <span class="scale__meta"><span class="scale__label">{b.label}</span><span class="scale__model">{b.model}</span></span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </Section>
+
+  <!-- 2. directions -->
+  <Section id="directions" class="directions section" rec="R-105" label="Напрями магазину">
+    <div class="container">
+      <h2 class="h2 section__title">Напрями магазину</h2>
+      <ul class="dir">
+        {directions.map((d) => (
+          <li class="dir__row" style={`--w:${d.w};--wm:${d.wm}`}>
+            {d.href ? (
+              <a class="dir__link" href={d.href}>
+                <span class="dir__name">{d.name}</span>
+                <span class="dir__text">{d.text}</span>
+                <svg class="dir__arrow" width="28" height="28" viewBox="0 0 18 18" aria-hidden="true" focusable="false"><path d="M3 9h11M10 4.5 14.5 9 10 13.5" fill="none" stroke="currentColor" stroke-width="1.6" /></svg>
+              </a>
+            ) : (
+              <FutureLink note={SOON} class="dir__link dir__link--soon">
+                <span class="dir__name">{d.name}</span>
+                <span class="dir__text">{d.text}</span>
+              </FutureLink>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </Section>
+
+  <!-- 3. energy -->
+  <Section id="energy" class="energy band section" rec="R-106,R-109" label="Енергонезалежність за задачею">
+    <div class="container">
+      <h2 class="h2 section__title">Енергонезалежність за задачею</h2>
+      <div class="tabs" role="tablist" aria-label="Задача" data-tabs>
+        {BRANCHES.map((b, i) => (
+          <button class="tab" role="tab" type="button" id={`tab-${b.id}`} aria-controls={`panel-${b.id}`} aria-selected={i === 0 ? "true" : "false"} tabindex={i === 0 ? 0 : -1} data-branch={b.id} style={`--w:${wdth(b.watts)}`}>
+            <span class="tab__fig">{b.value}&nbsp;{b.unit}</span>
+            <span class="tab__label">{b.label}</span>
+          </button>
+        ))}
+      </div>
+      <div class="panels">
+        {panels.map((p, i) => (
+          <div class:list={["panel", i === 0 && "is-active"]} role="tabpanel" id={`panel-${p.id}`} aria-labelledby={`tab-${p.id}`} data-panel={p.id}>
+            <div class="panel__head">
+              <p class="panel__intro">{p.intro}</p>
+              <p class="panel__lead">{p.lead}</p>
+            </div>
+            <ul class="models">
+              {p.models.map((m) => (
+                <li class="model">
+                  <h3 class="model__name">{m.name}</h3>
+                  <div class="model__data">
+                    {m.params.length > 0 && (
+                      <p class="model__params">{m.params.map(([v, u]) => <span class="param"><b style={pw(v, u)}>{v}{u && <>&nbsp;{u}</>}</b></span>)}</p>
+                    )}
+                    <p class="model__note">{m.note}</p>
+                  </div>
+                  <a class="model__ask" href={TELEGRAM} target="_blank" rel="noopener" aria-label={`Запитати про модель ${m.name}`}>Запитати про модель<svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" focusable="false"><path d="M3 9h11M10 4.5 14.5 9 10 13.5" fill="none" stroke="currentColor" stroke-width="2" /></svg></a>
+                </li>
+              ))}
+            </ul>
+            <p class="panel__more"><FutureLink note={SOON} class="more-link">До каталогу</FutureLink></p>
+          </div>
+        ))}
+      </div>
+      <p class="energy__extra"><span class="energy__extra-k">Також в напрямі</span> Starlink, генератори, повербанки, системи резервного живлення</p>
+    </div>
+  </Section>
+
+  <!-- 4. choose -->
+  <Section id="choose" class="choose section" rec="R-106" label="Як обрати">
+    <div class="container choose__grid">
+      <div class="choose__intro">
+        <h2 class="h2 section__title">Як обрати станцію: три величини</h2>
+        <p class="lead">Покажемо на одній моделі. У назві Fossibot F2400 уже є потужність, а на картці — ємність і режим ДБЖ.</p>
+        <p class="choose__cta"><Button href={TELEGRAM} external>Підберемо за списком приладів</Button></p>
+      </div>
+      <figure class="choose__fig" aria-label="Fossibot F2400: потужність 2400 Вт, ємність 2048 Вт·год, режим ДБЖ">
+        <figcaption class="choose__model">Fossibot F2400</figcaption>
+        <dl class="vals">
+          <div class="val"><dt>Потужність</dt><dd><b class="val__n">2&nbsp;400&nbsp;Вт</b><span>Скільки приладів можна ввімкнути одночасно: додайте їхню потужність.</span></dd></div>
+          <div class="val"><dt>Ємність</dt><dd><b class="val__n">2&nbsp;048&nbsp;Вт·год</b><span>Скільки часу станція живитиме прилади: ємність поділити на їхню потужність.</span></dd></div>
+          <div class="val"><dt>Безперебійність</dt><dd><b class="val__n">ДБЖ</b><span>Перемикання на батарею без вимкнення: комп’ютер і роутер працюють далі.</span></dd></div>
+        </dl>
+      </figure>
+    </div>
+  </Section>
+
+  <!-- 5. trust -->
+  <Section id="trust" class="trust section section--tight surface" rec="R-111,R-112" label="Сертифікати авторизованого дистриб’ютора">
+    <div class="container">
+      <h2 class="h2 section__title">Сертифікати авторизованого дистриб’ютора</h2>
+      <ul class="brands">{brands.map((b) => <li>{b}</li>)}</ul>
+      <p class="trust__more"><FutureLink note={SOON} class="more-link">Переглянути сертифікати</FutureLink></p>
+    </div>
+  </Section>
+
+  <!-- 6. how -->
+  <Section id="how" class="how section" label="Як купити">
+    <div class="container">
+      <h2 class="h2 section__title">Як купити</h2>
+      <div class="days" role="img" aria-label="Відправка за 2–5 робочих днів після підтвердження замовлення">
+        <div class="days__axis" aria-hidden="true">
+          <span class="days__range" data-reveal></span>
+          {[1, 2, 3, 4, 5, 6, 7].map((d) => <span class="days__tick" style={`--d:${d}`}>{d}</span>)}
+        </div>
+        <p class="days__cap" aria-hidden="true">робочі дні від підтвердження замовлення</p>
+      </div>
+      <ol class="steps">
+        {steps.map(([t, d], i) => (
+          <li class="step"><span class="step__n">{i + 1}</span><h3 class="step__t">{t}</h3><p class="step__d">{d}</p></li>
+        ))}
+      </ol>
+    </div>
+  </Section>
+
+  <!-- 7. service -->
+  <Section id="service" class="service section" rec="R-107,R-110" label="Гарантія простою мовою">
+    <div class="container">
+      <h2 class="h2 section__title">Гарантія простою мовою</h2>
+      <ul class="warr">
+        <li class="warr__i"><span class="warr__n">За талоном</span><span class="warr__t">Гарантія виробника</span></li>
+        <li class="warr__i"><span class="warr__n">30 днів</span><span class="warr__t">Пряма гарантія магазину</span></li>
+        <li class="warr__i"><span class="warr__n">6 місяців</span><span class="warr__t">Сервісний пакет EcoDrive Care, опційно</span></li>
+      </ul>
+      <div class="acc">
+        <details name="warranty">
+          <summary>Гарантія виробника</summary>
+          <p>Строк встановлює виробник конкретного товару. Він зазначений у гарантійному талоні, паспорті виробу або іншій супровідній документації.</p>
+        </details>
+        <details name="warranty">
+          <summary>Пряма гарантія магазину: 30 днів</summary>
+          <p>Це власне зобов’язання магазину понад вимоги закону. Рахується з дня отримання товару.</p>
+        </details>
+        <details name="warranty">
+          <summary>З якого дня рахується строк</summary>
+          <p>Від дня передачі товару вам: за датою фактичного отримання у відділенні перевізника. Дату перевіряють за номером ТТН.</p>
+        </details>
+      </div>
+      <ul class="svc-links">
+        <li><FutureLink note={SOON} class="svc">Статус замовлення</FutureLink></li>
+        <li><FutureLink note={SOON} class="svc">Гарантійний випадок</FutureLink></li>
+        <li><FutureLink note={SOON} class="svc">Повернення</FutureLink></li>
+      </ul>
+      <p class="svc-channels">Питання по гарантії швидше вирішити в розмові: <a href={TELEGRAM} target="_blank" rel="noopener">Telegram</a>, <a href={VIBER}>Viber</a> або <a href={PHONE.tel}>за телефоном</a>.</p>
+    </div>
+  </Section>
+
+  <!-- 8. transport -->
+  <Section id="transport" class="transport section" label="Електротранспорт">
+    <div class="container transport__grid">
+      <div>
+        <h2 class="h2 section__title">Електротранспорт</h2>
+        <p class="lead">Електросамокати, електровелосипеди, моноколеса й електробайки. Окремо — запчастини для Kugoo Kirin.</p>
+        <p class="transport__cta"><Button href={TELEGRAM} external variant="secondary">Запитати про модель</Button></p>
+      </div>
+      <ul class="tbrands">
+        <li>Kugoo Kirin</li><li>OUXI</li><li>Xiaomi</li><li>KingSong</li>
+        <li class="tbrands__parts">Запчастини Kugoo Kirin</li>
+      </ul>
+    </div>
+  </Section>
+
+  <!-- 9. wholesale -->
+  <Section id="wholesale" class="wholesale section section--tight surface" label="Опт і бізнес">
+    <div class="container wholesale__grid">
+      <div>
+        <h2 class="h2 section__title">Опт і бізнес</h2>
+        <p class="lead">Гуртові закупівлі та системи для бізнесу: C&amp;I ESS і BESS. Оплата безготівково за рахунком-фактурою, менеджер надсилає рахунок і пакет бухгалтерських документів.</p>
+        <ul class="docs"><li>Рахунок-фактура</li><li>Видаткові накладні</li><li>Бухгалтерські документи</li></ul>
+      </div>
+      <div class="wholesale__act">
+        <a class="bigmail" href={`mailto:${EMAIL}`}>{EMAIL}</a>
+        <p class="wholesale__form"><FutureLink note={SOON} class="more-link">Форма гуртових закупівель</FutureLink></p>
+      </div>
+    </div>
+  </Section>
+
+  <!-- 10. contacts -->
+  <Section id="contacts" class="contacts section" rec="R-103,R-104" label="Контакти">
+    <div class="container">
+      <h2 class="h2 section__title">Контакти</h2>
+      <a class="bigphone" href={PHONE.tel}><span>+380&nbsp;63</span> <span>153&nbsp;93&nbsp;83</span></a>
+      <p class="contacts__hours">{HOURS}</p>
+      <ul class="contacts__list">
+        <li><Button href={TELEGRAM} external>Telegram</Button></li>
+        <li><Button href={VIBER} variant="secondary">Viber</Button></li>
+        <li><a class="contacts__mail" href={`mailto:${EMAIL}`}>{EMAIL}</a></li>
+      </ul>
+      <p class="contacts__addr"><span class="footer__cap">Юридична адреса</span> {ADDRESS}</p>
+    </div>
+  </Section>
+
+  <BottomBar slot="footer" />
+</Base>

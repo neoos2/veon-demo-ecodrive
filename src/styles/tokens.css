@@ -1,0 +1,58 @@
+/* Hallmark · shape: scale · genre: modern-minimal · theme: custom · job: buy · idea: "ширина цифри дорівнює потужності" · vibe: "шильдик обладнання, точний, світлий, фірмовий бірюзовий"
+ * paper: #F4F8F6 · accent: #7FC342 (ink band only) · display: Science Gothic · body: Wix Madefor Text · hero: H1 і три величини потужності різної ширини на одній базовій лінії, що є перемикачем гілок · nav: ряд каналів + основний ряд з якорями · footer: світлий, один ряд · imagery: none · signature: три цифри різної ширини на першому екрані, потужність видна оком
+ * axes: light/grotesk-wide/chromatic-teal · posture: restrained · surface: absolute · contrast: pass · fold: pass · v2.0.0 */
+/* Hallmark · pre-emit critique: P4 H4 E4 S4 R4 V4 · weakest: imagery, фото товарів у проєкті немає — композиція тримається на типографіці, місця під фото клієнта лишено на FULL */
+/* Hallmark · waive 7b · on-primary text colour #FFFFFF · approved in design/concept.md (veon-concept colors), contrast 6,25:1 on the brand teal #116C66 */
+/* Hallmark · waive 2b · active tab figure fill (.tab__fig) · two flat brand colours with a hard edge that reveals left to right, not a decorative gradient; contrast 6,77:1 on the ink band */
+/* Client design tokens (design/concept.md, veon-concept). One token system; component CSS reads only these. */
+@import "@fontsource-variable/science-gothic/wdth.css";
+@import "@fontsource-variable/wix-madefor-text/wght.css";
+
+:root {
+  /* colour roles */
+  --color-bg: #F4F8F6;
+  --color-surface: #D4EEE9;
+  --color-text: #0F2E2B;
+  --color-ink: #0F2E2B;
+  --color-text-muted: #46605C;
+  --color-primary: #116C66;
+  --color-on-primary: #FFFFFF;
+  --color-accent: #7FC342;
+  --color-accent-ink: #0F2E2B;
+  --color-ink-muted: #A9C7C1;
+  --color-line: #B7D2CC;
+  /* derived: hover darkening of primary (8%) */
+  --color-primary-hover: color-mix(in srgb, var(--color-primary) 92%, #000);
+
+  /* type */
+  --font-display: "Science Gothic Variable", "Science Gothic", system-ui, sans-serif;
+  --font-body: "Wix Madefor Text Variable", "Wix Madefor Text", system-ui, sans-serif;
+  --fs-body: 1.0625rem;      /* 17 */
+  --fs-small: .9375rem;      /* 15 */
+  --fs-row: 1.25rem;         /* 20 */
+  --fs-h2: 1.875rem;         /* 30 */
+  --fs-h1: 2.125rem;         /* 34 */
+  --fs-figure: 2.25rem;      /* 36: values in choose / service */
+
+  /* shape, rhythm */
+  --radius: 4px;
+  --space: 24px;
+  --gap: 24px;
+  --container: 1440px;
+  --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px; --s-5: 24px; --s-6: 32px; --s-7: 48px; --s-8: 64px; --s-9: 96px; --s-10: 128px;
+  --section-y: 96px;
+  --header-h: 64px;
+  --bar-h: 64px;
+  --control-h: 48px;
+
+  /* motion */
+  --ease-out: cubic-bezier(.2, .7, .2, 1);
+  --dur: 600ms;
+  --dur-fast: 180ms;
+}
+@media (min-width: 768px) {
+  :root { --space: 48px; --section-y: 128px; --header-h: 72px; --fs-body: 1.125rem; --fs-row: 1.5rem; --fs-h2: 2.5rem; --fs-h1: 3rem; --fs-figure: 3rem; --control-h: 52px; }
+}
+@media (min-width: 1200px) {
+  :root { --space: 96px; --section-y: 160px; --fs-h2: 2.75rem; --fs-h1: 3.5rem }
+}

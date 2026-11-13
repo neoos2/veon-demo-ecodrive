@@ -1,0 +1,15 @@
+---
+import { ADDRESS } from "../data/site";
+const nav = [
+  ["#directions", "Напрями"], ["#energy", "Енергонезалежність"], ["#service", "Сервіс"],
+  ["#transport", "Електротранспорт"], ["#wholesale", "Опт"], ["#contacts", "Контакти"],
+];
+---
+<footer class="footer">
+  <div class="container footer__in">
+    <nav aria-label="Навігація внизу сторінки"><ul class="footer__nav">{nav.map(([h, l]) => <li><a href={h}>{l}</a></li>)}</ul></nav>
+    <p class="footer__line"><span class="footer__cap">Юридична адреса</span> {ADDRESS}</p>
+    <p class="footer__line"><span class="footer__cap">Оплата</span> карткою, на рахунок IBAN, післяплата, частинами, безготівковий розрахунок</p>
+    <p class="footer__copy">© 2021–2026 ECODRIVE</p>
+  </div>
+</footer>

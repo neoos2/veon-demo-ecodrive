@@ -1,0 +1,9 @@
+---
+// Real link styled as a button: primary (solid), secondary (outline), on-dark (accent).
+interface Props { href: string; variant?: "primary" | "secondary" | "dark"; class?: string; external?: boolean; rec?: string }
+const { href, variant = "primary", class: cls, external, rec } = Astro.props;
+---
+<a class:list={["btn", `btn--${variant}`, cls]} href={href} data-rec={rec} {...(external ? { target: "_blank", rel: "noopener" } : {})}>
+  <span><slot /></span>
+  <svg class="btn__arrow" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true" focusable="false"><path d="M3 9h11M10 4.5 14.5 9 10 13.5" fill="none" stroke="currentColor" stroke-width="2" /></svg>
+</a>
